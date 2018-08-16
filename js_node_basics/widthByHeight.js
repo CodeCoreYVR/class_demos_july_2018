@@ -1,4 +1,5 @@
 const fs = require("fs");
+const createRectangle = require("./createRectangle");
 
 const args = process.argv.slice(2);
 const [width, height] = args;
@@ -20,12 +21,6 @@ const [width, height] = args;
 // ****
 // ****
 // ****
-
-const createRectangle = (width, height) => {
-  return Array.from({ length: height })
-    .map(() => "*".repeat(width))
-    .join("\n");
-};
 
 const filename = `${width}_by_${height}`;
 
