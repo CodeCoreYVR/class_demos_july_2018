@@ -15,3 +15,4 @@ function countChars(string) {
 countChars('');
 countChars('hello world');
 countChars('hello world and hello CodeCore students');
+
