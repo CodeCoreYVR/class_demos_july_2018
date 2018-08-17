@@ -1,0 +1,19 @@
+{
+  "name": "my_project",
+  "version": "0.0.1",
+  "description": "My first Node project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tutorial",
+    "demo"
+  ],
+  "author": "Steve Godin",
+  "license": "ISC",
+  "dependencies": {
+    "jimp": "^0.3.5",
+    "qrcode": "^1.2.2"
+  }
+}

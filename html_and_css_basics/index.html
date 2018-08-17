@@ -1,0 +1,71 @@
+<!--
+  DOCTYPE tyells the browser which version of
+  HTML this document is using. In this case, HTML 5.
+  Disclaimer: This is not a tag.
+-->
+<!DOCTYPE html>
+
+<!--
+  The <html> tag is always the root or common
+  ancestor of all html documents. It will contain
+  all other tags on your page.
+-->
+<html>
+
+<head>
+  <!--
+      The <head> tag contains information about our
+      document. It's contents are not displayed.
+      This is where you load CSS & JavaScript files.
+    -->
+
+  <title>HTML & CSS: Basics</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<!--
+  The <body> is to hold all of your document's
+  visible content.
+-->
+
+<body>
+  <header>
+    <nav>
+      <a href="http://www.google.com">Google</a>
+      <a href="/boards">Boards</a>
+      <a href="/profile">Profile</a>
+      <form>
+        <input type="text" name="search">
+        <input type="submit" value="Search">
+      </form>
+    </nav>
+  </header>
+
+  <main>
+    <section id="starred-boards">
+      <h1>Starred Boards</h1>
+
+      <ul>
+        <li>Management</li>
+        <li style="background-image: url(https://images.pexels.com/photos/1287145/pexels-photo-1287145.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940)">
+          Learning to Hack
+        </li>
+      </ul>
+    </section>
+
+    <section id="personal-boards">
+      <h1>Personal Boards</h1>
+
+      <ul>
+        <li style="background-image: url(https://images.pexels.com/photos/1287145/pexels-photo-1287145.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940)">
+          Learning to Hack
+        </li>
+        <li>My Ideas</li>
+        <li>Things to do</li>
+        <li>Create New Board...</li>
+      </ul>
+    </section>
+  </main>
+</body>
+
+</html>
