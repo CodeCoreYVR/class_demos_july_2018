@@ -88,6 +88,7 @@ app.get("/survey/results", (request, response) => {
   // response.send(request.query);
   const fullName = request.query.fullName;
   const color = request.query.color;
+  const timeOfDay = request.query.timeOfDay;
 
   // (Optional) `response.render` can take an object as
   // a second argument where all its key-value pairs will
@@ -95,7 +96,8 @@ app.get("/survey/results", (request, response) => {
   // This is how we share data with template files.
   response.render("surveyResults", {
     fullName: fullName,
-    color: color
+    color: color,
+    timeOfDay: timeOfDay
   });
 });
 
