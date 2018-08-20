@@ -1,10 +1,23 @@
 const express = require("express");
+const logger = require("morgan");
 // Require the "express" package returns functions that can
 // to create an instance of an Express app. We build
 // an Express by calling a series of methods to configure
 // it before we run it.
 // This technique is called the "builder" pattern.
 const app = express();
+
+// -------------------
+// M I D D L E W A R E
+// -------------------
+
+// Calling "logger" returns a middleware function that
+// is passed as an argument to "app.use()". Everytime
+// a request will be made to our server this middleware function
+// will be called and it will log information about that request
+// to the console.
+
+app.use(logger("dev"));
 
 // URL (Uniform Resource Locator)
 // URL http://localhost:4545/hello_world
@@ -17,6 +30,10 @@ const app = express();
 
 // The "path" identifies the location of a resource on the server
 // the request is being made to. It's similar to a file path.
+
+// -----------
+// R O U T E S
+// -----------
 
 // The following method creates a "route" with a callback that
 // used to build the response that'll be sent back to the client.
