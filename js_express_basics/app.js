@@ -1,11 +1,13 @@
 const express = require("express");
 const logger = require("morgan");
+
 // Require the "express" package returns functions that can
 // to create an instance of an Express app. We build
 // an Express by calling a series of methods to configure
 // it before we run it.
 // This technique is called the "builder" pattern.
 const app = express();
+app.set("view engine", "ejs");
 
 // -------------------
 // M I D D L E W A R E
@@ -53,6 +55,22 @@ app.get("/hello_world", (request, response) => {
   // the client with it.
   response.send("Hello, Peoples!");
 });
+
+app.get("/", (request, response) => {
+  // `response.render(<ejs-filepath>)` is used
+  // to render a template from the "views/" directory at
+  // the relative file path of <ejs-filepath>. When writing
+  // the file path, you can ignore the extension.
+
+  // In the call below, the file at "./views/welcome.ejs" is
+  // rendered into HTML and is sent as the content of the response
+  // to the client.
+  response.render("welcome");
+});
+
+// ------------------
+// R U N  S E R V E R
+// ------------------
 
 const PORT = 4545;
 const HOST = "localhost"; // 127.0.0.1
