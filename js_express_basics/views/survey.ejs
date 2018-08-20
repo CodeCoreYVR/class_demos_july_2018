@@ -1,48 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Express Demo</title>
-</head>
-<body>
-  <h1>Survey</h1>
+<%- include("./partials/header") %> 
 
-  <!-- When a form is submitted, a HTTP request is made by the browser
-    to the URL written in the "action" attribute with the data
-    from the form. -->
-  <form action="/survey/results">
-    <div>
-      <label for="fullName">What is your name?</label> <br />
-      <input type="text" id="fullName" name="fullName">
-    </div>
+<h1>Survey</h1>
 
-    <div>
-      <label for="timeOfDay">What is your favourite time of day?</label> <br>
+<!-- When a form is submitted, a HTTP request is made by the browser
+  to the URL written in the "action" attribute with the data
+  from the form. -->
+<form action="/survey/results">
+  <div>
+    <label for="fullName">What is your name?</label> <br />
+    <input type="text" id="fullName" name="fullName">
+  </div>
 
-      <% for (let option of ["Morning", "Afternoon", "Evening", "Night"]) { %>
-        <label for="<%= option %>"><%= option %></label>
-        <input type="radio" name="timeOfDay" id="<%= option %>" value="<%= option %>">    
-      <% } %>
+  <div>
+    <label for="timeOfDay">What is your favourite time of day?</label> <br>
 
-      <!--
-      <label for="Morning">Morning</label>
-      <input type="radio" name="timeOfDay" id="Morning" value="Morning">
-      <label for="Afternoon">Afternoon</label>
-      <input type="radio" name="timeOfDay" id="Afternoon" value="Afternoon">
-      <label for="Evening">Evening</label>
-      <input type="radio" name="timeOfDay" id="Evening" value="Evening">
-      -->
-    </div>
+    <% for (let option of ["Morning", "Afternoon", "Evening", "Night"]) { %>
+      <label for="<%= option %>"><%= option %></label>
+      <input type="radio" name="timeOfDay" id="<%= option %>" value="<%= option %>">    
+    <% } %>
 
-    <div>
-      <label for="color">What is your favourite color?</label> <br>
-      <input type="color" name="color" id="color">
-    </div>
+    <!--
+    <label for="Morning">Morning</label>
+    <input type="radio" name="timeOfDay" id="Morning" value="Morning">
+    <label for="Afternoon">Afternoon</label>
+    <input type="radio" name="timeOfDay" id="Afternoon" value="Afternoon">
+    <label for="Evening">Evening</label>
+    <input type="radio" name="timeOfDay" id="Evening" value="Evening">
+    -->
+  </div>
 
-    <input type="submit" value="Submit">
-  </form>
+  <div>
+    <label for="color">What is your favourite color?</label> <br>
+    <input type="color" name="color" id="color">
+  </div>
 
-</body>
-</html>
+  <input type="submit" value="Submit">
+</form>
+
+<%- include("./partials/footer") %>
