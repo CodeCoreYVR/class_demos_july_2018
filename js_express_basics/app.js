@@ -34,7 +34,7 @@ app.get("/hello_world", (request, response) => {
   // The "response" argument is an object that represents the server's
   // reply to the client. We build out the content to send back to
   // the client with it.
-  response.send("Hello, Universe!");
+  response.send("Hello, Peoples!");
 });
 
 const PORT = 4545;
