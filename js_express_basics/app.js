@@ -68,6 +68,51 @@ app.get("/", (request, response) => {
   response.render("welcome");
 });
 
+app.get("/survey", (request, response) => {
+  console.log("---------------------------");
+  console.log("Request's Query String Data");
+  console.log("---------------------------");
+  console.log(request.query);
+
+  // "request.query" is a property that holds an object
+  // which contains of all the key-value pairs from
+  // a URL's query string.
+  // For example:
+  // .../survey?fullName=Steve&color=%2300fdff
+  // request.query === { fullName: "Steve", color: "#00fdff"} // true
+
+  response.render("survey");
+});
+
+app.get("/survey/results", (request, response) => {
+  // response.send(request.query);
+  const fullName = request.query.fullName;
+  const color = request.query.color;
+
+  // (Optional) `response.render` can take an object as
+  // a second argument where all its key-value pairs will
+  // turned into variables inside of the template that is rendered.
+  // This is how we share data with template files.
+  response.render("surveyResults", {
+    fullName: fullName,
+    color: color
+  });
+});
+
+// URL http://localhost:4545/survey?fullName=Steve&color=%2300fdff
+//   scheme | host     |port| path | query string (search string)
+
+// A "query" is a way to store data in the data in the URL.
+// It use the URL Encoding format.
+
+// Following a url's path and seperated by a "?" will be a
+// a query string which holds key-value pairs of data.
+// The format appears as follows:
+// ?[key_1]=[value_1]&[key_2]=[value_2]&[key_3]=[value_3]
+
+// When a form is submitted, its data will by default be included
+// into the URL with the above format.
+
 // ------------------
 // R U N  S E R V E R
 // ------------------
