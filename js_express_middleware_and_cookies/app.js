@@ -1,6 +1,7 @@
 const path = require("path");
 const express = require("express");
 const logger = require("morgan");
+const cookieParser = require("cookie-parser");
 
 // Require the "express" package returns functions that can
 // to create an instance of an Express app. We build
@@ -37,6 +38,51 @@ app.use(logger("dev"));
 // directories from a specified path and serve it all
 // publically on the web.
 app.use(express.static(path.join(__dirname, "public")));
+
+// URLENCODED
+
+// This middleware will decode data from forms that
+// use the POST method.
+// When the "extended" option is set to `true`, arrays and objects
+// will be support in the url encoding.
+app.use(express.urlencoded({ extended: true }));
+// The data from the form will be available on the
+// `request.body` property instead of the `request.query`.
+
+// COOKIE PARSER
+app.use(cookieParser());
+
+// CUSTOM MIDDLEWARE
+
+// `app.use` is similar to `app.get`, but it works for
+// all HTTP methods (e.g. GET, POST, DELETE, PUT, PATCH, etc)
+// all URL paths.
+app.use((request, response, next) => {
+  console.log("🍪 Cookies:", request.cookies);
+  // Read cookies from the request with `request.cookies`
+  // Cookies are represented as object where each key
+  // is a cookie name and its value is the cookie's value.
+  // You must install & setup "cookie-parser" to
+  // read cookies.
+  const username = request.cookies.username;
+
+  // Set properties on `response.locals` object to
+  // create variables that are global to all of your
+  // EJS templates. In code below, we set a property
+  // "username" that becomes a variable "username"
+  // in all our templates.
+  response.locals.username = "";
+
+  if (username) {
+    response.locals.username = username;
+    console.log(`🤓 Signed in as ${username}`);
+  }
+
+  // The third argument, "next", is a function that
+  // when called tells Express that this middleware has completed
+  // its job and its time to move to the next middleware in line.
+  next();
+});
 
 // URL (Uniform Resource Locator)
 // URL http://localhost:4545/hello_world
@@ -131,6 +177,26 @@ app.get("/survey/results", (request, response) => {
 
 // When a form is submitted, its data will by default be included
 // into the URL with the above format.
+
+const COOKIE_MAX_AGE = 1000 * 60 * 60 * 24 * 7;
+app.post("/sign_in", (request, response) => {
+  const username = request.body.username;
+
+  // `response.cookie(<cookie-name>, <cookie-value>, <options)`
+  // The above method is added to the `response` object by
+  // the `cookie-parser` middleware. Use to send cookies to
+  // the browser.
+  // - The first argument is a string that's the name of the cookie
+  // - The second, a value for the cookie
+  // - (optional) The last, options for the cookie
+
+  response.cookie("username", username, { maxAge: COOKIE_MAX_AGE });
+
+  // Like `response.send` and `response.render`, `response.redirect`
+  // ends the response with a redirect status code and a location (i.e. URL) where
+  // the browser should make a GET request to (should browse to).
+  response.redirect("/");
+});
 
 // ------------------
 // R U N  S E R V E R
