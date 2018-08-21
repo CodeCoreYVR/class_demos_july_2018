@@ -35,10 +35,15 @@
         </ul>
 
         <% if (username) { %>
-          <span class="navbar-text text-light">
+          <span class="navbar-text text-light mr-2">
             👩‍💻 <%= username %>
           </span>
+
+          <form action="/sign_out" method="POST" class="form-inline">
+            <button class="btn btn-outline-light" type="submit">Sign Out</button>
+          </form>
         <% } else { %>
+
           <form action="/sign_in" method="POST" class="form-inline">
             <input class="form-control mr-2" name="username" placeholder="Username">
             <button class="btn btn-outline-light" type="submit">Sign In</button>

@@ -198,6 +198,11 @@ app.post("/sign_in", (request, response) => {
   response.redirect("/");
 });
 
+app.post("/sign_out", (request, response /*, next */) => {
+  response.clearCookie("username");
+  response.redirect("/");
+});
+
 // ------------------
 // R U N  S E R V E R
 // ------------------
