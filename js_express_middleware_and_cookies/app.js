@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const logger = require("morgan");
 
@@ -13,6 +14,7 @@ app.set("view engine", "ejs");
 // M I D D L E W A R E
 // -------------------
 
+// LOGGING
 // Calling "logger" returns a middleware function that
 // is passed as an argument to "app.use()". Everytime
 // a request will be made to our server this middleware function
@@ -20,6 +22,21 @@ app.set("view engine", "ejs");
 // to the console.
 
 app.use(logger("dev"));
+
+// STATIC ASSETS
+// Use path.join to combine strings into directory paths.
+// Example:
+// path.join("/", "Users", "bob") -> "/Users/bob"
+
+// `__dirname` is a global variable inside Node.js scripts
+// that returns the full directory path beginning from root (i.e. /)
+// to the file that holds `__dirname`.
+// console.log("__dirname in ./app.js:", __dirname);
+
+// The static assets middleware will take all files and
+// directories from a specified path and serve it all
+// publically on the web.
+app.use(express.static(path.join(__dirname, "public")));
 
 // URL (Uniform Resource Locator)
 // URL http://localhost:4545/hello_world
