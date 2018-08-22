@@ -29,3 +29,12 @@ knex("posts")
 knex("posts")
   .where("title", "ilike", "%e")
   .then(console.log);
+
+// Doing a join
+k("posts")
+  // When joining, table columns with the same name will
+  // replace keys with same in the returned data.
+  // Make sure alias the columns that you want to keep.
+  .select("id", "content", "comments.content as commentContent")
+  .innerJoin("comments", "posts.id", "comments.postId")
+  .then(console.log);

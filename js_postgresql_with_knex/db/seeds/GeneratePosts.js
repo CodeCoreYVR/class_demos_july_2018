@@ -5,6 +5,8 @@ const random = n => Math.ceil(Math.random() * n);
 
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
+
+  return Promise.resolve();
   return knex("posts")
     .del()
     .then(() => {
