@@ -9,6 +9,7 @@
     "db:drop": "dropdb -e --if-exists express_demo",
     "db:migrate": "knex migrate:latest",
     "db:rollback": "knex migrate:rollback",
+    "db:seed": "knex seed:run",
     "db:repl": "psql -d express_demo"
   },
   "keywords": [
@@ -27,6 +28,7 @@
     "pg": "^7.4.3"
   },
   "devDependencies": {
+    "faker": "^4.1.0",
     "nodemon": "^1.18.3"
   }
 }
