@@ -6,7 +6,9 @@
   "scripts": {
     "start": "nodemon app.js",
     "db:create": "createdb -e express_demo",
-    "db:drop": "dropdb -e --if-exists express_demo"
+    "db:drop": "dropdb -e --if-exists express_demo",
+    "db:migrate": "knex migrate:latest",
+    "db:rollback": "knex migrate:rollback"
   },
   "keywords": [
     "server",
