@@ -1,0 +1,25 @@
+{
+  "name": "express_demo",
+  "version": "0.0.1",
+  "description": "Class demonstration for building an Express application",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "keywords": [
+    "server",
+    "express",
+    "backend"
+  ],
+  "author": "Steve Godin",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "morgan": "^1.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.3"
+  }
+}
