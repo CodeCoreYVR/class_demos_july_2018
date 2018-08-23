@@ -2,6 +2,7 @@ const path = require("path");
 const express = require("express");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
+const methodOverride = require("method-override");
 
 // Require the "express" package returns functions that can
 // to create an instance of an Express app. We build
@@ -48,6 +49,18 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 // The data from the form will be available on the
 // `request.body` property instead of the `request.query`.
+
+// METHOD OVERRIDE
+
+app.use(
+  methodOverride((req, res) => {
+    if (typeof req.body === "object" && req.body._method) {
+      const method = req.body._method;
+      delete req.body._method;
+      return method;
+    }
+  })
+);
 
 // COOKIE PARSER
 app.use(cookieParser());

@@ -19,6 +19,11 @@
     <!-- Forms only support the methods GET and POST. -->
     <form action="/posts/<%= post.id %>" method="POST">
       <input
+        type="hidden"
+        name="_method"
+        value="DELETE">
+
+      <input
         type="submit"
         value="Delete"
         class="btn btn-outline-success">

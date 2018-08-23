@@ -68,7 +68,7 @@ router.get("/:id", (req, res) => {
 });
 
 // Posts#destroy -> DELETE /posts/:id
-router.post("/:id", (req, res) => {
+router.delete("/:id", (req, res) => {
   const { id } = req.params;
 
   knex("posts")
