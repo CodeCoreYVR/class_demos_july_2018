@@ -29,7 +29,8 @@ router.post("/", (req, res) => {
     .insert({
       imageUrl,
       title,
-      content
+      content,
+      viewCount: 0
     })
     .returning("id")
     // Use `returning` this to get the `id` of the post that
@@ -63,6 +64,18 @@ router.get("/:id", (req, res) => {
     // having your post in an array.
     .then(post => {
       res.render("posts/show", { post });
+    });
+});
+
+// Posts#destroy -> DELETE /posts/:id
+router.post("/:id", (req, res) => {
+  const { id } = req.params;
+
+  knex("posts")
+    .where("id", id)
+    .del()
+    .then(() => {
+      res.redirect("/posts");
     });
 });
 
