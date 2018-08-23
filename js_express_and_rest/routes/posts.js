@@ -32,8 +32,10 @@ router.post("/", (req, res) => {
       content
     })
     .returning("id")
-    .then(post => {
-      res.send(post);
+    // Use `returning` this to get the `id` of the post that
+    // was just created
+    .then(([id]) => {
+      res.redirect(`/posts/${id}`);
     });
 });
 
@@ -43,6 +45,24 @@ router.get("/", (req, res) => {
     .orderBy("createdAt", "desc")
     .then(posts => {
       res.render("posts/index", { posts });
+    });
+});
+
+// Posts#show -> Get /posts/:id
+router.get("/:id", (req, res) => {
+  // In the URL above, all the names prefixed with
+  // `:` are called URL params. You can access URL
+  // params with `req.params`.
+  const { id } = req.params;
+
+  knex("posts")
+    .where("id", id)
+    .first()
+    // Knex method that works with select that will
+    // return only the first post. Do this to avoid
+    // having your post in an array.
+    .then(post => {
+      res.render("posts/show", { post });
     });
 });
 
