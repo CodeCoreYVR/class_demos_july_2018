@@ -14,7 +14,7 @@ exports.seed = function(knex, Promise) {
         content: faker.lorem.paragraph(),
         imageUrl: faker.image.imageUrl(),
         viewCount: random(10000),
-        createdAt: new Date(2018, random(12), random(31))
+        createdAt: faker.date.recent()
       }));
 
       // Even inside a then-callback, always return

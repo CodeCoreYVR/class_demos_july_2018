@@ -37,4 +37,13 @@ router.post("/", (req, res) => {
     });
 });
 
+// Posts#index -> GET /posts
+router.get("/", (req, res) => {
+  knex("posts")
+    .orderBy("createdAt", "desc")
+    .then(posts => {
+      res.render("posts/index", { posts });
+    });
+});
+
 module.exports = router;
