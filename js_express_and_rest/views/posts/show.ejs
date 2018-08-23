@@ -16,18 +16,26 @@
       <em>Posted at <%= post.createdAt %></em>
     </p>
 
-    <!-- Forms only support the methods GET and POST. -->
-    <form action="/posts/<%= post.id %>" method="POST">
-      <input
-        type="hidden"
-        name="_method"
-        value="DELETE">
+    <div class="d-flex">
+      <a
+        href="/posts/<%= post.id %>/edit"
+        class="btn btn-outline-success mr-2">
+        Edit
+      </a>
 
-      <input
-        type="submit"
-        value="Delete"
-        class="btn btn-outline-success">
-    </form>
+      <!-- Forms only support the methods GET and POST. -->
+      <form action="/posts/<%= post.id %>" method="POST">
+        <input
+          type="hidden"
+          name="_method"
+          value="DELETE">
+
+        <input
+          type="submit"
+          value="Delete"
+          class="btn btn-outline-success">
+      </form>
+    </div>
   </div>
 </div>
 

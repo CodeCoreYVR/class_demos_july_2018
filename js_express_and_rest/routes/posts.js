@@ -79,4 +79,33 @@ router.delete("/:id", (req, res) => {
     });
 });
 
+// Posts#edit -> GET /posts/:id/edit
+router.get("/:id/edit", (req, res) => {
+  const { id } = req.params;
+
+  knex("posts")
+    .where("id", id)
+    .first()
+    .then(post => {
+      res.render("posts/edit", { post });
+    });
+});
+
+// Posts#update -> PATCH /posts/:id
+router.patch("/:id", (req, res) => {
+  const { id } = req.params;
+  const { title, imageUrl, content } = req.body;
+
+  knex("posts")
+    .where("id", id)
+    .update({
+      title,
+      imageUrl,
+      content
+    })
+    .then(() => {
+      res.redirect(`/posts/${id}`);
+    });
+});
+
 module.exports = router;
