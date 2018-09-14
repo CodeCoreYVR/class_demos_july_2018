@@ -104,15 +104,33 @@ html * {
   background-color: grey;
 }
 
-#toxic-tim { background-image: url(./images/toxic_tim.jpg); }
-#bumble-bertha { background-image: url(./images/bumble_bertha.jpg); }
-#nina-the-ninja { background-image: url(./images/nina_the_ninja.jpg); }
-#larry-the-lion { background-image: url(./images/larry_the_lion.jpg); }
-#inbread-dog { background-image: url(./images/inbread_dog.jpg); }
-#four-fists-larry { background-image: url(./images/four_fists_phil.jpg); }
-#knight-nicholas { background-image: url(./images/knight_nicholas.jpg); }
-#archmage-alfie { background-image: url(./images/archmage_alfie.jpg); }
-#moneybags-michael { background-image: url(./images/moneybags_michael.jpg); }
+#toxic-tim {
+  background-image: url(./images/toxic_tim.jpg);
+}
+#bumble-bertha {
+  background-image: url(./images/bumble_bertha.jpg);
+}
+#nina-the-ninja {
+  background-image: url(./images/nina_the_ninja.jpg);
+}
+#larry-the-lion {
+  background-image: url(./images/larry_the_lion.jpg);
+}
+#inbread-dog {
+  background-image: url(./images/inbread_dog.jpg);
+}
+#four-fists-larry {
+  background-image: url(./images/four_fists_phil.jpg);
+}
+#knight-nicholas {
+  background-image: url(./images/knight_nicholas.jpg);
+}
+#archmage-alfie {
+  background-image: url(./images/archmage_alfie.jpg);
+}
+#moneybags-michael {
+  background-image: url(./images/moneybags_michael.jpg);
+}
 
 .application {
   margin-bottom: 9px;
