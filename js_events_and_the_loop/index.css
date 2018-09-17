@@ -83,6 +83,9 @@ html * {
   flex-flow: column;
   justify-content: flex-end;
   align-items: center;
+
+  /* transition: property-name | duration (in s or ms) | delay (in s or ms) */
+  transition: transform 250ms 0ms, filter 500ms 0ms;
 }
 
 .doggo > h1 {
@@ -96,6 +99,18 @@ html * {
 }
 
 .doggo.fighter.hovered {
+  filter: grayscale(1);
+}
+
+.doggo.inverted {
+  filter: invert(1);
+}
+
+.doggo.flipped {
+  transform: rotate(180deg);
+}
+
+.doggo.monochromed {
   filter: grayscale(1);
 }
 
