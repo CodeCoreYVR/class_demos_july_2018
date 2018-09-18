@@ -50,21 +50,24 @@ router.get("/", (req, res) => {
 });
 
 // Posts#show -> Get /posts/:id
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res, next) => {
   // In the URL above, all the names prefixed with
   // `:` are called URL params. You can access URL
   // params with `req.params`.
   const { id } = req.params;
 
-  knex("posts")
-    .where("id", id)
-    .first()
-    // Knex method that works with select that will
-    // return only the first post. Do this to avoid
-    // having your post in an array.
-    .then(post => {
-      res.render("posts/show", { post });
-    });
+  try {
+    const post = await knex("posts")
+      .where("id", id)
+      .first();
+    const comments = await knex("comments")
+      .where("postId", id)
+      .orderBy("createdAt", "desc");
+
+    res.render("posts/show", { post, comments });
+  } catch (error) {
+    next(error);
+  }
 });
 
 // Posts#destroy -> DELETE /posts/:id

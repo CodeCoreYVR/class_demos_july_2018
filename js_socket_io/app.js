@@ -1,5 +1,7 @@
 const path = require("path");
+const http = require("http");
 const express = require("express");
+const socketIo = require("socket.io");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const methodOverride = require("method-override");
@@ -10,6 +12,9 @@ const methodOverride = require("method-override");
 // it before we run it.
 // This technique is called the "builder" pattern.
 const app = express();
+const server = http.Server(app);
+const io = socketIo(server);
+
 app.set("view engine", "ejs");
 
 // -------------------
@@ -124,12 +129,50 @@ app.use("/", welcomeRouter);
 // prefix all of their URLs with /posts.
 app.use("/posts", postsRouter);
 
+// -------------
+// S O C K E T S
+// -------------
+
+const knex = require("./db/client");
+
+io.on("connection", socket => {
+  socket.on("create comment", async params => {
+    const { postId, content } = params;
+    console.log("IO create comment", params);
+
+    try {
+      const [comment] = await knex
+        .insert({ postId, content })
+        .into("comments")
+        .returning("*");
+
+      socket.emit("new comment", comment);
+      socket.to(`posts_${postId}`).emit("new comment", comment);
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
+  socket.on("join comment room", postId => {
+    const room = `posts_${postId}`;
+
+    socket.join(room, () => {
+      const msg = "IO User joined " + room;
+      console.log(msg);
+
+      // Doesn't send to itself
+      socket.to(room).send(msg);
+      socket.send(msg);
+    });
+  });
+});
+
 // ------------------
 // R U N  S E R V E R
 // ------------------
 
 const PORT = 4545;
 const HOST = "localhost"; // 127.0.0.1
-app.listen(PORT, HOST, () => {
+server.listen(PORT, HOST, () => {
   console.log(`💻 Server listening on http://${HOST}:${PORT}`);
 });

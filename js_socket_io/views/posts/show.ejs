@@ -1,5 +1,46 @@
 <%- include("../partials/header") %>
 
+<script>
+  const socket = io();
+
+  const commentItemEl = comment => h(
+    "li",
+    {class: "list-group-item"},
+      [
+        comment.content,
+        h("br"),
+        h("small", {class: "text-muted"}, comment.createdAt)
+      ]
+    )
+
+  
+  document.addEventListener("DOMContentLoaded", () => {
+    socket.emit("join comment room", <%= post.id %>);
+    
+    socket.on("new comment", data => {
+      document.querySelector("#new-comment").reset();
+      document.querySelector("#comment-list").prepend(commentItemEl(data));
+    });
+
+    socket.on("message", msg => {
+      console.log(msg);
+    });
+
+    const newCommentForm = document.querySelector("#new-comment");
+  
+    newCommentForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const { currentTarget: form } = event;
+  
+      const formData = new FormData(form);
+      socket.emit(
+        "create comment",
+        { postId: <%= post.id %>, content: formData.get("content") }
+      );
+    })
+  });
+</script>
+
 <div class="card mb-4">
   <% if (post.imageUrl) { %>
     <img
@@ -12,8 +53,9 @@
     <h5 class="card-title"><%= post.title %></h5>
     <p class="card-text">
       <%= post.content %> <br>
-      <em>Seen <%= post.viewCount %> time(s)</em> •
-      <em>Posted at <%= post.createdAt %></em>
+      <small class="text-muted">Seen <%= post.viewCount %> time(s)</small>
+      <small class="text-muted">•</small>
+      <small class="text-muted">Posted at <%= new Date(post.createdAt).toLocaleString() %></small>
     </p>
 
     <div class="d-flex">
@@ -37,6 +79,21 @@
       </form>
     </div>
   </div>
+    
+  <form id="new-comment" class="card-body pt-0">
+    <input type="hidden" name="postId" value="<%= post.id %>">
+    <input type="text" name="content" class="form-control" placeholder="What's on your mind?">
+  </form>
+
+  <ul id="comment-list" class="list-group list-group-flush">
+    <% for (let comment of comments) { %>
+      <li class="list-group-item">
+          <%= comment.content %> <br />
+          <small class="text-muted"><%= comment.createdAt %></small>
+      </li>
+    <% } %>
+  </ul>
 </div>
+
 
 <%- include("../partials/footer") %>
