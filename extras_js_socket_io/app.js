@@ -1,5 +1,7 @@
 const path = require("path");
+const http = require("http");
 const express = require("express");
+const socketIo = require("socket.io");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const methodOverride = require("method-override");
@@ -10,6 +12,9 @@ const methodOverride = require("method-override");
 // it before we run it.
 // This technique is called the "builder" pattern.
 const app = express();
+const server = http.Server(app);
+const io = socketIo(server);
+
 app.set("view engine", "ejs");
 
 // -------------------
@@ -124,12 +129,61 @@ app.use("/", welcomeRouter);
 // prefix all of their URLs with /posts.
 app.use("/posts", postsRouter);
 
+// -------------
+// S O C K E T S
+// -------------
+const knex = require("./db/client");
+
+// .addEventListener
+io.on("connection", socket => {
+  console.log("IO User connected");
+
+  socket.on("disconnect", reason => {
+    console.log("IO User disconnected");
+  });
+
+  socket.on("joinRoom", roomName => {
+    console.log("IO User joined room:", roomName);
+    // Use the `join` method on the server to have a socket join a
+    // room. A room is like group of sockets that we can use to broadcast
+    // to only that group.
+    socket.join(roomName);
+  });
+
+  // In client JavaScript, we call:
+  // `socket.emit("newComment", "Hello!")`
+
+  // To receive that data, listen for it on the server side.
+  // The code below is waiting for `emit` calls with a first argument
+  // of "newComment". The second argument of the `emit` call will be
+  // the first argument that the listener callback receives which is
+  // `params` in this case.
+  socket.on("newComment", async params => {
+    console.log("IO Client said:", params);
+
+    const [comment] = await knex("comments")
+      .insert(params)
+      .returning("*");
+
+    socket.emit("newComment", comment);
+    // Emitting on socket will only send a message through socket.
+    // To send a message to all connected sockets, use the `broadcast`
+    // property. However, this will not send it to the original socket.
+    // socket.broadcast.emit("newComment", comment);
+
+    // To emit a message to all sockets in a room (except for the
+    // socket itself), use the `to` method with the name of
+    // a room, then call `emit` as you normally would.
+    socket.to(`post${params.postId}`).emit("newComment", comment);
+  });
+});
+
 // ------------------
 // R U N  S E R V E R
 // ------------------
 
 const PORT = 4545;
 const HOST = "localhost"; // 127.0.0.1
-app.listen(PORT, HOST, () => {
+server.listen(PORT, HOST, () => {
   console.log(`💻 Server listening on http://${HOST}:${PORT}`);
 });
