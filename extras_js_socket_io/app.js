@@ -70,6 +70,43 @@ app.use(
 // COOKIE PARSER
 app.use(cookieParser());
 
+// USER AUTH. CUSTOM MIDDLEWARE
+
+// - You will need https://github.com/expressjs/session#readme
+//   - Which requires a backing DB, I would use https://github.com/tj/connect-redis
+// - You will need a user table that you can create with a Knex migration
+// - You will need to add a userId FK to posts and comments
+//   - You can use async/await when writing the code. I especially encourage
+//     when working with Knex. They've been taught the syntax.
+// - You will need https://github.com/kelektiv/node.bcrypt.js to hash passwords
+// - You'll want to create routes for /users and /session as we would in Rails.
+//   Feel free to write the knex queries directly in the "controllers". I'll go
+//   over refactoring everything when I come back.
+// - You'll have to write a middleware method like so to find and set the user
+
+app.use(async (request, response, next) => {
+  const { userId } = req.session;
+
+  try {
+    let currentUser;
+    if (userId) {
+      currentUser = await knex("users")
+        .where("id", userId)
+        .first();
+    }
+
+    // Makes currentUser a property of the request object for your
+    // route handlers
+    request.currentUser = currentUser;
+
+    // Makes currentUser a local variable in views
+    response.locals.currentUser = currentUser;
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
 // CUSTOM MIDDLEWARE
 
 // `app.use` is similar to `app.get`, but it works for
