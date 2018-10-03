@@ -21,6 +21,9 @@ router.get("/hello_world", (request, response) => {
 });
 
 router.get("/", (request, response) => {
+  console.log('#####');
+  console.log(request.currentUser);
+  console.log('#####');
   // `response.render(<ejs-filepath>)` is used
   // to render a template from the "views/" directory at
   // the relative file path of <ejs-filepath>. When writing

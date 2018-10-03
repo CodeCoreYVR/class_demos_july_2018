@@ -43,6 +43,10 @@
           </li>
         </ul>
 
+        <% if (currentUser) { %>
+          <%= currentUser.userName %>
+        <% } %>
+
         <% if (username) { %>
           <span class="navbar-text text-light mr-2">
             👩‍💻 <%= username %>

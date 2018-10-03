@@ -14,8 +14,12 @@ const methodOverride = require("method-override");
 const app = express();
 const server = http.Server(app);
 const io = socketIo(server);
+const session = require('express-session');
 
 app.set("view engine", "ejs");
+
+// app.set('trust proxy', 1) // trust first proxy
+
 
 // -------------------
 // M I D D L E W A R E
@@ -44,6 +48,7 @@ app.use(logger("dev"));
 // directories from a specified path and serve it all
 // publically on the web.
 app.use(express.static(path.join(__dirname, "public")));
+
 
 // URLENCODED
 
@@ -102,6 +107,37 @@ app.use((request, response, next) => {
   next();
 });
 
+app.use(session({ secret: 'keyboard cat', 
+                  resave: true, 
+                  saveUninitialized: false,
+                  cookie: { secure: false, maxAge: 30 * 24 * 60 * 60 * 1000 }}));
+
+app.use(async (req, res, next) => {
+
+  const { userId } = req.session;
+  
+  res.locals.currentUser = null;
+
+  if(userId) {
+    // fetch user
+    try {
+      const user = await knex("users")
+        .where("id", userId)
+        .first();
+  
+      req.currentUser = user;
+      res.locals.currentUser = user; // this makes it accessible in view files
+      next();
+    } catch (error) {
+      // If the code above, crashes we're going to take the `error` object and have
+      // Express deal with using the `next` function.
+      next(error);
+    }
+  } else {
+    next();
+  }
+});
+
 // URL (Uniform Resource Locator)
 // URL http://localhost:4545/hello_world
 //  scheme  | host     |port| path
@@ -120,6 +156,7 @@ app.use((request, response, next) => {
 
 const welcomeRouter = require("./routes/welcome");
 const postsRouter = require("./routes/posts");
+const usersRouter = require("./routes/users");
 
 app.use("/", welcomeRouter);
 // You can split routes into their modules with
@@ -128,6 +165,8 @@ app.use("/", welcomeRouter);
 // The app.use(...) will route all routes inside of postsRouter
 // prefix all of their URLs with /posts.
 app.use("/posts", postsRouter);
+
+app.use("/users", usersRouter);
 
 // -------------
 // S O C K E T S

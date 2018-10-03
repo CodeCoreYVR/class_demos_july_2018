@@ -4,7 +4,11 @@ const knex = require("../db/client");
 
 // posts#new -> GET /posts/new
 router.get("/new", (req, res) => {
-  res.render("posts/new");
+  if(req.currentUser) {
+    res.render("posts/new");
+  } else {
+    res.redirect('/');
+  }
 });
 
 // posts#create -> POST /posts
