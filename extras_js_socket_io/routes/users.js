@@ -2,20 +2,19 @@ const express = require("express");
 const router = express.Router();
 const knex = require("../db/client");
 
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
-router.get('/new', (req, res) => {
+router.get("/new", (req, res) => {
   res.render("users/new");
 });
 
-router.post('/', async (req, res) => {
-  console.log(req.body);
-
+router.post("/", async (req, res, next) => {
   const { userName, email, password } = req.body;
 
-  bcrypt.genSalt(10, async function(err, salt) {
-    bcrypt.hash(password, salt, async function(err, passwordDigest) {
-      const [id] = await knex("users")
+  try {
+    const passwordDigest = await bcrypt.hash(password, 10);
+
+    const [id] = await knex("users")
       .insert({
         userName,
         email,
@@ -23,17 +22,12 @@ router.post('/', async (req, res) => {
       })
       .returning("id");
 
-      req.session.userId = id;
-  
-      res.redirect('/');
-    });
-  });
+    req.session.userId = id;
+
+    res.redirect("/");
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;
-
-// const bcrypt = require('bcrypt');
-// const genSalt =  async () => {
-//   const salt = await bcrypt.genSalt(10)
-//   return salt;
-// }

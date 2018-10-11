@@ -4,7 +4,7 @@ module.exports = {
   development: {
     client: "pg",
     connection: {
-      database: "express_demo"
+      database: "express_demo_july"
       // The following two fields are required for a Linux
       // setup. If you don't have a password for your user,
       // you must create one.

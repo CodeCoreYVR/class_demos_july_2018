@@ -5,6 +5,8 @@ const socketIo = require("socket.io");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const methodOverride = require("method-override");
+const session = require("express-session");
+const RedisStore = require("connect-redis")(session);
 
 // Require the "express" package returns functions that can
 // to create an instance of an Express app. We build
@@ -14,12 +16,10 @@ const methodOverride = require("method-override");
 const app = express();
 const server = http.Server(app);
 const io = socketIo(server);
-const session = require('express-session');
 
 app.set("view engine", "ejs");
 
 // app.set('trust proxy', 1) // trust first proxy
-
 
 // -------------------
 // M I D D L E W A R E
@@ -48,7 +48,6 @@ app.use(logger("dev"));
 // directories from a specified path and serve it all
 // publically on the web.
 app.use(express.static(path.join(__dirname, "public")));
-
 
 // URLENCODED
 
@@ -107,24 +106,28 @@ app.use((request, response, next) => {
   next();
 });
 
-app.use(session({ secret: 'keyboard cat', 
-                  resave: true, 
-                  saveUninitialized: false,
-                  cookie: { secure: false, maxAge: 30 * 24 * 60 * 60 * 1000 }}));
+const sessionMiddleware = session({
+  secret: "keyboard cat",
+  store: new RedisStore({ port: 6379, host: "localhost" }),
+  saveUninitialized: true,
+  resave: true,
+  cookie: { secure: false, maxAge: 30 * 24 * 60 * 60 * 1000 }
+});
+
+app.use(sessionMiddleware);
 
 app.use(async (req, res, next) => {
-
   const { userId } = req.session;
-  
+
   res.locals.currentUser = null;
 
-  if(userId) {
+  if (userId) {
     // fetch user
     try {
       const user = await knex("users")
         .where("id", userId)
         .first();
-  
+
       req.currentUser = user;
       res.locals.currentUser = user; // this makes it accessible in view files
       next();
@@ -157,6 +160,7 @@ app.use(async (req, res, next) => {
 const welcomeRouter = require("./routes/welcome");
 const postsRouter = require("./routes/posts");
 const usersRouter = require("./routes/users");
+const sessionRouter = require("./routes/session");
 
 app.use("/", welcomeRouter);
 // You can split routes into their modules with
@@ -167,15 +171,36 @@ app.use("/", welcomeRouter);
 app.use("/posts", postsRouter);
 
 app.use("/users", usersRouter);
+app.use("/session", sessionRouter);
 
 // -------------
 // S O C K E T S
 // -------------
 const knex = require("./db/client");
 
-// .addEventListener
-io.on("connection", socket => {
+// Use Express' session to
+io.use((socket, next) => {
+  // Adapt sessionMiddleware to socket.io
+  sessionMiddleware(socket.request, socket.request.res, next);
+});
+
+// Set currentUser on socket
+io.use(async (socket, next) => {
+  const { userId } = socket.request.session;
+
+  if (userId) {
+    socket.currentUser = await knex("posts")
+      .where("id", userId)
+      .first();
+  }
+
+  next();
+});
+
+io.on("connection", async socket => {
   console.log("IO User connected");
+
+  console.log(socket.currentUser);
 
   socket.on("disconnect", reason => {
     console.log("IO User disconnected");
